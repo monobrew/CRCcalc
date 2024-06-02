@@ -44,8 +44,6 @@ def getCRC(message_bitstring: str, polynomial_bitstring: str):
 
     curr_off = 0
 
-    if interactive: printCRCState(m, curr_off, p_len, p_len_strip)
-
     while int(m[:m_len], 2):
 
         if m[curr_off] == '0':
@@ -53,12 +51,13 @@ def getCRC(message_bitstring: str, polynomial_bitstring: str):
             curr_off += 1
             continue
 
+        if interactive:
+            printCRCState(m, curr_off, p_len, p_len_strip)
+            printPoly(p, curr_off)
+            time.sleep(delay)
+
         m = m[: curr_off] + format(int(m[curr_off : curr_off+p_len_strip], 2) ^ int(p, 2), '0' + str(p_len_strip) + 'b') + m[curr_off+p_len_strip :]
 
-        if interactive:
-            printPoly(p, curr_off)
-            printCRCState(m, curr_off, p_len, p_len_strip)
-            time.sleep(delay)
 
         curr_off += 1
 
