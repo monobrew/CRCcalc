@@ -84,7 +84,11 @@ except ValueError:
     print("Incorrect polynomial form.")
     exit()
 
-poly_string = format(hex(int(args.input_poly[0], 16)))
+if not args.input_poly[0].startswith('0x'):
+    args.input_poly[0] = "0x" + args.input_poly[0]
+
+
+poly_string = format(args.input_poly[0])
 
 msg = bitstring.BitArray(args.input_txt[0].encode('utf-8'))
 poly = bitstring.BitArray(poly_string)
