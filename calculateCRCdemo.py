@@ -27,7 +27,7 @@ def printPoly(p: str, curr_off: int):
     cprint(p, 'red', end='\n')
 
 
-def getCRC(message_bitstring: str, polynomial_bitstring: str):
+def getDivisionRemainder(message_bitstring: str, polynomial_bitstring: str):
     
     polynomial_bitstring = '1' + polynomial_bitstring
 
@@ -64,6 +64,39 @@ def getCRC(message_bitstring: str, polynomial_bitstring: str):
     print(hex(int(m[-(p_len - 1):], 2)))
 
 
+def calculateCRC(message_bitarray: bitstring.BitArray, polynomial_bitarray: bitstring.BitArray):
+    polynomial_bitarray.prepend('0b0')
+
+    m_len = len(message_bitarray)
+    p_len = len(polynomial_bitarray)
+    
+    # Adding polynomial_length - 1 zero padding to the message
+    message_bitarray.append(p_len - 1)
+
+    # inverting first polynomial_length - 1 bits
+    message_bitarray.invert([0,p_len - 2])
+
+    # Removing leading zeros from the polynomial
+    p = bitstring.BitArray('0b' + polynomial_bitarray.bin.lstrip())
+
+    p_len_strip = len(p)
+
+    curr_off = 0
+
+    while int(m[:m_len], 2):
+
+        if m[curr_off] == '0':
+            curr_off += 1
+            continue
+
+        m = m[: curr_off] + format(int(m[curr_off : curr_off+p_len_strip], 2) ^ int(p, 2), '0' + str(p_len_strip) + 'b') + m[curr_off+p_len_strip :]
+
+        curr_off += 1
+
+    m = m[:p_len-1] + format(int(message_bitstring[-(p_len-1):],2) ^ int('0xffffffff', 16))
+    print(hex(int(m[-(p_len - 1):], 2)))
+    
+
 
 parser = argparse.ArgumentParser(description='Calculates CRC value of a given text input.')
 parser.add_argument('input_txt', metavar='TEXT', type=str, nargs=1, help='Text to be given to the CRC calculator.')
@@ -92,4 +125,6 @@ poly_string = format(args.input_poly[0])
 
 msg = bitstring.BitArray(args.input_txt[0].encode('utf-8'))
 poly = bitstring.BitArray(poly_string)
-getCRC(msg.bin, poly.bin)
+
+#getDivisionRemainder(msg.bin, poly.bin)
+calculateCRC(msg: bitstring.BitArray, poly)
