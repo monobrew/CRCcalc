@@ -126,5 +126,5 @@ poly_string = format(args.input_poly[0])
 msg = bitstring.BitArray(args.input_txt[0].encode('utf-8'))
 poly = bitstring.BitArray(poly_string)
 
-#getDivisionRemainder(msg.bin, poly.bin)
-calculateCRC(msg: bitstring.BitArray, poly)
+getDivisionRemainder(msg.bin, poly.bin)
+#calculateCRC(msg: bitstring.BitArray, poly)
